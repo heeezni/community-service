@@ -42,6 +42,3 @@ application-dev.properties
 
 # uploads folder
 uploads/
-
-# Markdown documentation files
-*.md

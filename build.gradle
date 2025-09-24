@@ -2,6 +2,10 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.6'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.diffplug.spotless' version '7.0.4' // 코드 포매터(Spotless)
+}
+ext {
+    springCloudVersion = "2025.0.0"
 }
 
 group = 'com.example'
@@ -25,18 +29,65 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+    // swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.0'
+
+    // commons-lang3 CVE-2025-48924 취약점 해결 → 버전 3.18.0 명시
+    implementation 'org.apache.commons:commons-lang3:3.18.0'
+
+    // Web MVC (Spring MVC 기반 REST API)
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // Bean Validation(JSR 380)
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Security (PasswordEncoder만 사용)
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // DB (MySQL + JPA)
     runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // Lombok (컴파일 시 의존성)
+    compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // DevTools (개발 환경 전용)
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+dependencyManagement {
+    // Spring Cloud 라이브러리 버전 통일(BOM)
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+    }
+}
+
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+// 컴파일 전 코드 정리
+tasks.named('compileJava'){
+    dependsOn 'spotlessApply'
+}
+
+spotless {
+    java {
+        //Google JAVA Format 적용
+        googleJavaFormat()
+        // 아래 순서로 import 문 정렬
+        importOrder('java', 'javax', 'jakarta', 'org', 'com')
+        // 사용하지 않는 import 제거
+        removeUnusedImports()
+        // 각 라인 끝에 있는 공백을 제거
+        trimTrailingWhitespace()
+        // 파일 끝에 새로운 라인 추가
+        endWithNewline()
+    }
 }
