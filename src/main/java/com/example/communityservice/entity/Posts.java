@@ -87,11 +87,6 @@ public class Posts {
     this.views++;
   }
 
-  /** 게시글 좋아요 수 증가 사용자가 좋아요를 누를 때 호출하여 좋아요 수를 1 증가시킴 */
-  public void increaseLikes() {
-    this.likes++;
-  }
-
   /**
    * 게시글 정보 수정 게시글 수정 시 제목, 내용, 카테고리, 태그를 일괄 업데이트
    *
