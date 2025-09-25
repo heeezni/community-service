@@ -72,7 +72,11 @@ public class Posts {
   @Builder.Default
   private List<Comments> comments = new ArrayList<>();
 
-  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(
+      mappedBy = "post",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.EAGER)
   @Builder.Default
   private List<PostAttachments> attachments = new ArrayList<>();
 
