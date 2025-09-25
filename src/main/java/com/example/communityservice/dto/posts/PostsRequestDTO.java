@@ -45,7 +45,7 @@ public class PostsRequestDTO {
   @Schema(description = "익명 사용자 여부", example = "true")
   private Boolean isAnonymous;
 
-  @Schema(description = "작성자명 (익명인 경우)", example = "익명123", maxLength = 100)
+  @Schema(description = "작성자명", example = "heeezni", maxLength = 100)
   @Size(max = 100, message = "작성자명은 100자를 초과할 수 없습니다")
   private String authorName;
 
