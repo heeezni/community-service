@@ -31,7 +31,10 @@ public class Authors {
 
   @Column(name = "is_anonymous", nullable = false)
   @Builder.Default
-  private Boolean isAnonymous = false; // 익명 여부
+  private Boolean isAnonymous = false;
+
+  /* Entity 필드를 primitive 타입(boolean) 대신 wrapper 타입(Boolean) 사용한 이유 :
+  Fail-Fast 전략 (값 안 넣으면 null,제약조건에 걸림)*/
 
   @Column(name = "anonymous_email", nullable = true)
   private String anonymousEmail; // 익명 사용자 이메일 (익명 선택 시에만)
@@ -55,15 +58,13 @@ public class Authors {
   /**
    * 익명 작성자 생성 비회원이 게시글/댓글 작성 시 익명 정보로 작성자 엔티티를 생성
    *
-   * @param authorName 익명 닉네임
    * @param email 익명 이메일 (수정/삭제 시 인증용)
    * @param encodedPassword 암호화된 패스워드 (수정/삭제 시 인증용)
    * @return 익명 작성자 엔티티
    */
-  public static Authors createAnonymousAuthor(
-      String authorName, String email, String encodedPassword) {
+  public static Authors createAnonymousAuthor(String email, String encodedPassword) {
     return Authors.builder()
-        .authorName(authorName)
+        .authorName("익명")
         .isAnonymous(true)
         .anonymousEmail(email)
         .anonymousPwd(encodedPassword)
